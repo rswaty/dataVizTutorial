@@ -1,11 +1,83 @@
 ---
-title: "Home"
+title: "Intro and agenda"
+author: "Randy Swaty, TNC's LANDFIRE team"
 site: workflowr::wflow_site
-output:
+output: 
   workflowr::wflow_html:
-    toc: false
+    code_folding: hide
 editor_options:
   chunk_output_type: console
 ---
 
-Welcome to my research website.
+Welcome!  I prepared this website for The Nature Conservancy's Michigan Business Unit Science Writing Workshop, April, 2021.  We will be enjoying a couple hours together, learning a little R.  While I guess that it is technically a website, it's more of a "sharing space", a place to share code, data and documentation.
+
+## Goals and assumptions
+Two hours will go by quickly.  With that, my goals are to:
+
+* set up your very own data viz R-Studio project
+* show you basics of reading data into R
+* walk through customization of a chart using ggplot
+* introduce other topics such as interactivity, exporting charts, and sending many charts to PDF
+
+I assume that you will:
+
+* Install R.  Go to the Comprehensive R Archive Network download page (https://repo.miserver.it.umich.edu/cran/) then select the download for your operating system.  Install.  This will give you the "language", some base packages, and a terminal.  You may never see any of this once installed (except when you update R!)
+* Install R-Studio.  This is the "interface" we will use.  Go to https://www.rstudio.com/products/rstudio/, then download and install the Open Source Edition of the Desktop version. 
+* Arrive with a confident, patient and collaborative spirit.  We all have something to share and offer, whether clarifying questions, better ways of doing things or explaining concepts
+
+
+```{r chord, message=FALSE, warning=FALSE}
+
+############## chord diagram ##############
+
+
+library(chorddiag)
+library(igraph)
+library(readr)
+library(tidygraph)
+library(htmlwidgets)
+# saveWidget(p, file=paste0( getwd(), "/HtmlWidget/chord_interactive.html"))
+
+
+# read in data
+histFireGVchord <- read_csv("data/histFireGVchord.csv")
+#view(histFireGVchord)
+
+#convert to matrix
+histFireGVchordMatrix<-as.matrix(as_adjacency_matrix(as_tbl_graph(histFireGVchord),attr = "acres"))
+
+#clean up matrix (could be cleaner!)
+histFireGVchordMatrix = subset(histFireGVchordMatrix, select = -c(1:7))
+
+histFireGVchordMatrix2 <- histFireGVchordMatrix[-c(8:10),]
+
+#make a custom color pallet
+
+# ORIGINAL
+groupColors <-c( "#e6e0be", # grassland OK
+                 "#56bf5f", # hardwood OK
+                 "#1d4220", # conifer OK
+                 "#7db7c7", # riparian OK
+                 "#397d3f", # hardwood-conifer OK
+                 "#917e5c", # shrub
+                 "#5e513a", # savana
+                 "#fed98e", # surface
+                 "#fe9929", # mixed
+                 "#cc4c02")
+
+
+#make chord diagram
+chord<-chorddiag(data = histFireGVchordMatrix2,
+                 type = "bipartite",
+                 groupColors = groupColors,
+                 groupnamePadding = 10,
+                 groupPadding = 3,
+                 groupnameFontsize = 11 ,
+                 showTicks = FALSE,
+                 margin=80,
+                 tooltipGroupConnector = "    &#x25B6;    ",
+                 chordedgeColor = "#B3B6B7"
+)
+chord   
+```
+
