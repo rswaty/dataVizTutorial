@@ -25,19 +25,20 @@ I assume that you will:
 * Install R-Studio.  This is the "interface" we will use.  Go to https://www.rstudio.com/products/rstudio/, then download and install the Open Source Edition of the Desktop version. 
 * Arrive with a confident, patient and collaborative spirit.  We all have something to share and offer, whether clarifying questions, better ways of doing things or explaining concepts
 
+## Demo chord diagram
+The chart below allows users to explore the relationship between broad vegetation types and their dominant historical fire severity.  If you hover over one of the outer segments the associated bands are highlighted.  The numbers in the popups are acres per year.  For example, LANDFIRE models estimate that there would have been 70,802,040 acres of replacement fire in grassland ecosystems of the lower 48 states every year!
+
+Hit the "Code" button to see the code.
 
 ```{r chord, message=FALSE, warning=FALSE}
 
 ############## chord diagram ##############
-
 
 library(chorddiag)
 library(igraph)
 library(readr)
 library(tidygraph)
 library(htmlwidgets)
-# saveWidget(p, file=paste0( getwd(), "/HtmlWidget/chord_interactive.html"))
-
 
 # read in data
 histFireGVchord <- read_csv("data/histFireGVchord.csv")
